@@ -1,0 +1,27 @@
+{
+  "$schema": "https://vyges.com/schema/v1/vyges-metadata.schema.json",
+  "x-version": "1.0.0",
+  "name": "cf-i2s",
+  "version": "0.1.0",
+  "description": "I2S audio interface controller from ChipFoundry. Configurable sample width and clock divider, TX/RX FIFOs. APB / AHB-Lite / Wishbone wrappers.",
+  "license": "Apache-2.0",
+  "maturity": "stable",
+  "target": ["asic", "fpga"],
+  "design_type": ["digital", "peripheral", "audio"],
+  "created": "2026-05-20T21:40:09Z",
+  "updated": "2026-05-20T21:40:09Z",
+  "source": {"type": "git", "url": "https://github.com/chipfoundry/CF_I2S", "commit": "b58a1eba129430bce5dc81d27b95648f305ff7b0", "private": false, "containsEncryptedPayload": false, "indexing": true},
+  "maintainers": [{"name": "Vyges", "url": "https://vyges.com", "github": "vyges"}],
+  "interfaces": [
+    {"type": "clock", "direction": "input", "protocol": "generic", "port": "clk_i", "width": 1},
+    {"type": "reset", "direction": "input", "protocol": "generic", "port": "rst_i", "width": 1},
+    {"type": "bus", "direction": "slave", "protocol": "wishbone-b4"},
+    {"type": "bus", "direction": "slave", "protocol": "apb"},
+    {"type": "bus", "direction": "slave", "protocol": "ahb-lite"},
+    {"type": "io", "direction": "output", "port": "sck", "width": 1, "description": "I2S serial clock"},
+    {"type": "io", "direction": "output", "port": "ws", "width": 1, "description": "I2S word select"},
+    {"type": "io", "direction": "output", "port": "sd", "width": 1, "description": "I2S serial data"},
+    {"type": "interrupt", "direction": "output", "port": "irq", "width": 1}
+  ],
+  "tags": ["i2s", "audio", "peripheral", "chipfoundry", "sky130"]
+}

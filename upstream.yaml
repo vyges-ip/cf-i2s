@@ -1,0 +1,14 @@
+schema_version: "vyges-upstream-v1"
+upstream:
+  type: "standalone"
+  repo: https://github.com/chipfoundry/CF_I2S
+  branch: main
+  commit: b58a1eba129430bce5dc81d27b95648f305ff7b0
+  extracted_at: "2026-05-20T21:40:09Z"
+license:
+  spdx: Apache-2.0
+  file: LICENSE
+metadata_locked: false
+notes: |
+  ChipFoundry is the successor org to Efabless. CF_I2S (Original Copyright 2024 Efabless Corp.)
+  is now maintained by ChipFoundry.
