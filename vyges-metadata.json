@@ -9,9 +9,15 @@
   "target": ["asic", "fpga"],
   "design_type": ["digital", "peripheral", "audio"],
   "created": "2026-05-20T21:40:09Z",
-  "updated": "2026-05-20T21:40:09Z",
+  "updated": "2026-06-25T05:08:04Z",
   "source": {"type": "git", "url": "https://github.com/chipfoundry/CF_I2S", "commit": "b58a1eba129430bce5dc81d27b95648f305ff7b0", "private": false, "containsEncryptedPayload": false, "indexing": true},
   "maintainers": [{"name": "Vyges", "url": "https://vyges.com", "github": "vyges"}],
+  "integration": {
+    "soc_generator_hints": {
+      "top_module": "CF_I2S",
+      "note": "Integration top is CF_I2S. Without this hint the soc-generator derives the module name from the IP name ('cf_i2s'), which does not match the RTL top module."
+    }
+  },
   "interfaces": [
     {"type": "clock", "direction": "input", "protocol": "generic", "port": "clk_i", "width": 1},
     {"type": "reset", "direction": "input", "protocol": "generic", "port": "rst_i", "width": 1},
