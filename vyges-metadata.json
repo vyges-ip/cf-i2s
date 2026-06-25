@@ -6,28 +6,196 @@
   "description": "I2S audio interface controller from ChipFoundry. Configurable sample width and clock divider, TX/RX FIFOs. APB / AHB-Lite / Wishbone wrappers.",
   "license": "Apache-2.0",
   "maturity": "stable",
-  "target": ["asic", "fpga"],
-  "design_type": ["digital", "peripheral", "audio"],
+  "target": [
+    "asic",
+    "fpga"
+  ],
+  "design_type": [
+    "digital",
+    "peripheral",
+    "audio"
+  ],
   "created": "2026-05-20T21:40:09Z",
-  "updated": "2026-06-25T05:08:04Z",
-  "source": {"type": "git", "url": "https://github.com/chipfoundry/CF_I2S", "commit": "b58a1eba129430bce5dc81d27b95648f305ff7b0", "private": false, "containsEncryptedPayload": false, "indexing": true},
-  "maintainers": [{"name": "Vyges", "url": "https://vyges.com", "github": "vyges"}],
+  "updated": "2026-06-25T05:27:57Z",
+  "source": {
+    "type": "git",
+    "url": "https://github.com/chipfoundry/CF_I2S",
+    "commit": "b58a1eba129430bce5dc81d27b95648f305ff7b0",
+    "private": false,
+    "containsEncryptedPayload": false,
+    "indexing": true
+  },
+  "maintainers": [
+    {
+      "name": "Vyges",
+      "url": "https://vyges.com",
+      "github": "vyges"
+    }
+  ],
   "integration": {
     "soc_generator_hints": {
-      "top_module": "CF_I2S",
-      "note": "Integration top is CF_I2S. Without this hint the soc-generator derives the module name from the IP name ('cf_i2s'), which does not match the RTL top module."
+      "top_module": "vyges_cf_i2s_apb",
+      "rtl_files": [
+        "vyges-additions/vyges_cf_i2s_apb.sv"
+      ],
+      "clock": {
+        "port": "PCLK"
+      },
+      "reset": {
+        "port": "PRESETn"
+      },
+      "bus_slave": {
+        "addr_width": 32,
+        "ports": {
+          "psel": "PSEL",
+          "penable": "PENABLE",
+          "pwrite": "PWRITE",
+          "paddr": "PADDR",
+          "pwdata": "PWDATA",
+          "prdata": "PRDATA",
+          "pready": "PREADY"
+        }
+      },
+      "note": "Vyges overlay vyges_cf_i2s_apb (vyges-additions/) presents clk_i/rst_ni + a clean APB4 slave + the I2S pads (ws/sck/sdi) + IRQ; wraps CF_I2S_APB (clk_i->PCLK, rst_ni->PRESETn). CF_I2S_APB uses cf_util_* from cf-ip-util."
     }
   },
   "interfaces": [
-    {"type": "clock", "direction": "input", "protocol": "generic", "port": "clk_i", "width": 1},
-    {"type": "reset", "direction": "input", "protocol": "generic", "port": "rst_i", "width": 1},
-    {"type": "bus", "direction": "slave", "protocol": "wishbone-b4"},
-    {"type": "bus", "direction": "slave", "protocol": "apb"},
-    {"type": "bus", "direction": "slave", "protocol": "ahb-lite"},
-    {"type": "io", "direction": "output", "port": "sck", "width": 1, "description": "I2S serial clock"},
-    {"type": "io", "direction": "output", "port": "ws", "width": 1, "description": "I2S word select"},
-    {"type": "io", "direction": "output", "port": "sd", "width": 1, "description": "I2S serial data"},
-    {"type": "interrupt", "direction": "output", "port": "irq", "width": 1}
+    {
+      "name": "clock",
+      "type": "clock",
+      "direction": "input",
+      "signals": [
+        {
+          "name": "clk_i",
+          "direction": "input",
+          "type": "clock",
+          "width": 1
+        }
+      ]
+    },
+    {
+      "name": "reset",
+      "type": "reset",
+      "direction": "input",
+      "signals": [
+        {
+          "name": "rst_ni",
+          "direction": "input",
+          "type": "reset",
+          "width": 1,
+          "active_level": "low"
+        }
+      ]
+    },
+    {
+      "name": "apb",
+      "type": "bus",
+      "protocol": "apb",
+      "direction": "slave",
+      "description": "APB4 slave (via the vyges_cf_i2s_apb overlay).",
+      "signals": [
+        {
+          "name": "PADDR",
+          "direction": "input",
+          "type": "address",
+          "width": 32
+        },
+        {
+          "name": "PWRITE",
+          "direction": "input",
+          "type": "control",
+          "width": 1
+        },
+        {
+          "name": "PWDATA",
+          "direction": "input",
+          "type": "data",
+          "width": 32
+        },
+        {
+          "name": "PSEL",
+          "direction": "input",
+          "type": "control",
+          "width": 1
+        },
+        {
+          "name": "PENABLE",
+          "direction": "input",
+          "type": "control",
+          "width": 1
+        },
+        {
+          "name": "PREADY",
+          "direction": "output",
+          "type": "control",
+          "width": 1
+        },
+        {
+          "name": "PRDATA",
+          "direction": "output",
+          "type": "data",
+          "width": 32
+        }
+      ]
+    },
+    {
+      "name": "i2s_ws",
+      "type": "io",
+      "direction": "output",
+      "signals": [
+        {
+          "name": "ws",
+          "direction": "output",
+          "type": "data",
+          "width": 1
+        }
+      ]
+    },
+    {
+      "name": "i2s_sck",
+      "type": "io",
+      "direction": "output",
+      "signals": [
+        {
+          "name": "sck",
+          "direction": "output",
+          "type": "data",
+          "width": 1
+        }
+      ]
+    },
+    {
+      "name": "i2s_sdi",
+      "type": "io",
+      "direction": "input",
+      "signals": [
+        {
+          "name": "sdi",
+          "direction": "input",
+          "type": "data",
+          "width": 1
+        }
+      ]
+    },
+    {
+      "name": "irq",
+      "type": "interrupt",
+      "direction": "output",
+      "signals": [
+        {
+          "name": "IRQ",
+          "direction": "output",
+          "type": "interrupt",
+          "width": 1
+        }
+      ]
+    }
   ],
-  "tags": ["i2s", "audio", "peripheral", "chipfoundry", "sky130"]
+  "tags": [
+    "i2s",
+    "audio",
+    "peripheral",
+    "chipfoundry",
+    "sky130"
+  ]
 }
